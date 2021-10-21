@@ -1,0 +1,71 @@
+#+TITLE: Emacs module prelude
+
+This small prelude makes writing Lisp in Emacs dynamic modules more pleasant (or less painful, depending on how you see it). We use semantic versioning and remain backward-compatible inside every major version. Currently it comes with the =emacs-module.h= of Emacs 28. But it shouldn’t be much trouble to use for other versions.
+
+To use Emacs module prelude, include =emacs-module.h=, =emacs-module-prelude.h= and =emacs-module-prelude.c=. You can probably use other versions of =emacs-module.h= but I haven’t tested.
+
+This is just a small helper library that I extracted from my dynamic module and has much to be desired. Contributions and corrections are welcome!
+
+Provided functions:
+- ~emp_define_function~
+- ~emp_funcall~
+- ~emp_intern~
+- ~emp_provide~
+- ~emp_signal_message1~
+- ~emp_define_error~
+- ~emp_nilp~
+- ~emp_copy_string_contents~ (stolen from [[https://phst.eu/emacs-modules.html#copy_string_contents][Phillipp’s document]])
+
+Most functions are C equivalents of Elisp functions that dynamic modules often need. They are mainly for convenience. For example, ~emp_funcall~ lets you write
+#+begin_src C
+emp_funcall (env, "cons", 2, car, cdr);
+#+end_src
+
+instead of
+#+begin_src C
+emacs_value args[2];
+args[0] = car;
+args[1] = cdr;
+env->funcall (env, env->intern (env, "cons"), args);
+#+end_src
+
+Here are more examples, documentation can be found in =emacs-module-prelude.h=.
+#+begin_src C
+static const char my_fabulous_function_doc[] =
+  "My fabulous function.\n"
+  "\n"
+  "Some explaination.\n"
+  "(fn ARG1 ARG2 &optional ARG3)";
+
+emacs_value
+Fmy_fabulous_function
+(emacs_env *env, ptrdiff_t nargs, emacs_value args[], void *data)
+  EMACS_NOEXCEPT
+{
+  if (emp_nilp (env, something))
+    emp_signal_message1 (env, "my-fabuous-error", "oops");
+  return something;
+}
+
+int
+emacs_module_init (struct emacs_runtime *ert) EMACS_NOEXCEPT
+{
+  emacs_env *env = ert->get_environment (ert);
+  emp_define_error (env, "my-fabulous-error", "This is impossible!!!", "error");
+  emp_define_function (env, "my-fabulous-function", 2, 3,
+                       &Fmy_fabulous_function, my_fabulous_function_doc);
+  emp_provide (env, "my-fabulous-module");
+  /* Return 0 to indicate module loaded successfully. */
+  return 0;
+}
+#+end_src
+
+#+begin_src C
+emacs_value lisp_string;
+char *string;
+size_t size;
+if (!emp_copy_string_contents (env, lisp_string, &string, &size))
+  { ... }
+...
+free(*string);
+#+end_src
