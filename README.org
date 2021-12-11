@@ -15,6 +15,7 @@ Provided functions:
 - ~emp_define_error~
 - ~emp_nilp~
 - ~emp_copy_string_contents~ (stolen from [[https://phst.eu/emacs-modules.html#copy_string_contents][Phillipp’s document]])
+- ~emp_build_string~
 
 Most functions are C equivalents of Elisp functions that dynamic modules often need. They are mainly for convenience. For example, ~emp_funcall~ lets you write
 #+begin_src C

@@ -19,7 +19,14 @@ emp_copy_string_contents
 (emacs_env *env, emacs_value value, char **buffer, size_t *size);
 
 /*
-  Intern NAME to a symbol.
+  Return a Lisp string. This is basically env->make_string except that
+  it calls strlen for you.
+ */
+emacs_value
+emp_build_string (emacs_env *env, const char *string);
+
+/*
+  Intern NAME to a symbol. NAME has to be all-ASCII.
  */
 emacs_value
 emp_intern (emacs_env *env, const char *name);

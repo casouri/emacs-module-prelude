@@ -35,6 +35,12 @@ emp_copy_string_contents
 }
 
 emacs_value
+emp_build_string (emacs_env *env, const char *string)
+{
+  return env->make_string (env, string, strlen (string));
+}
+
+emacs_value
 emp_intern (emacs_env *env, const char *name)
 {
   return env->intern (env, name);
