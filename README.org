@@ -2,7 +2,7 @@
 
 This small prelude makes writing Lisp in Emacs dynamic modules more pleasant (or less painful, depending on how you see it). We use semantic versioning and remain backward-compatible inside every major version. Currently it comes with the =emacs-module.h= of Emacs 28. But it shouldn’t be much trouble to use for other versions.
 
-To use Emacs module prelude, include =emacs-module.h=, =emacs-module-prelude.h= and =emacs-module-prelude.c=. You can probably use other versions of =emacs-module.h= but I haven’t tested.
+To use Emacs module prelude, include =emacs-module.h= and =emacs-module-prelude.h=. You can probably use other versions of =emacs-module.h= but I haven’t tested.
 
 This is just a small helper library that I extracted from my dynamic module and has much to be desired. Contributions and corrections are welcome!
 
